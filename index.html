@@ -1,15 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>retail-demo-project</title>
-    <!-- Salesforce Marketing Cloud Personalization SDK -->
-    <script src="https://cdn.salesforce.com/interactions/1.0.0/salesforce-interactions.js"></script>
+    <title>Aura Retail | Premium Demo</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="/" class="brand">AURA.</a>
+        <nav class="nav-links">
+          <a href="#">Men</a>
+          <a href="#">Women</a>
+          <a href="#">Kids</a>
+        </nav>
+        <div class="cart-icon">
+          <a href="/checkout.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Redefine Your Style</h1>
+          <p>Discover our exclusive collections hand-picked for your unique identity.</p>
+          <button class="cta-button">Shop Now</button>
+        </div>
+      </section>
+
+      <!-- Dynamic Categories Carousel -->
+      <section class="categories-section">
+        <h2>Explore Categories</h2>
+        <div class="carousel-container">
+          <button class="carousel-btn prev" id="carousel-prev">&lt;</button>
+          <div class="carousel-track" id="categories-track">
+            <!-- Populated via TS -->
+          </div>
+          <button class="carousel-btn next" id="carousel-next">&gt;</button>
+        </div>
+      </section>
+
+      <!-- Featured Products -->
+      <section class="products-section">
+        <h2>Featured Products</h2>
+        <div class="products-grid" id="products-grid">
+          <!-- Populated via TS -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Aura Retail Demo. All rights reserved.</p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
