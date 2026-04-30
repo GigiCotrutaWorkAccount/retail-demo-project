@@ -24,7 +24,9 @@ const PRODUCT_SQL = `SELECT
   ssot__PrimaryProductCategory__c,
   ssot__PrimaryProductImageURL__c
 FROM
-  ssot__Product__dlm`;
+  ssot__Product__dlm
+WHERE
+  ssot__PrimaryProductImageURL__c IS NOT NULL`;
 
 type DataCloudRow = {
   ssot__Id__c?: string;
