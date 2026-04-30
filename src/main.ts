@@ -16,7 +16,7 @@ type ProductFeedResponse = {
   products: FeedProduct[];
 };
 
-const fallbackProducts: FeedProduct[] = [
+export const fallbackProducts: FeedProduct[] = [
   {
     id: 'men-storm-runner',
     name: 'Storm Runner',
@@ -224,7 +224,7 @@ function renderProducts(products: FeedProduct[]) {
 
   track.innerHTML = products.map((product) => `
     <article class="home-product-card">
-      <a class="home-product-media" href="${product.href}">
+      <a class="home-product-media" href="/product.html?id=${product.id}&sale=true">
         <img src="${product.image}" alt="${product.name}" loading="lazy" />
       </a>
       <div class="home-product-info">
@@ -237,7 +237,7 @@ function renderProducts(products: FeedProduct[]) {
           <span>$${product.price.toFixed(0)}</span>
         </div>
         <div class="home-product-actions">
-          <a class="text-link" href="${product.href}">View product</a>
+          <a class="text-link" href="/product.html?id=${product.id}&sale=true">View product</a>
           <button class="mini-cart-button" type="button" data-product-id="${product.id}">Add</button>
         </div>
       </div>
