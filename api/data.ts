@@ -10,8 +10,10 @@ function readEnv(...keys: string[]) {
 
 const AUTH_URL = readEnv('SFDC_AUTH_URL', 'SALESFORCE_AUTH_URL') || 'https://ca1768230333461.my.salesforce.com/services/oauth2/token';
 const QUERY_URL = readEnv('SFDC_QUERY_URL', 'SALESFORCE_QUERY_URL') || 'https://ca1768230333461.my.salesforce.com/services/data/v61.0/ssot/query';
-const CLIENT_ID = readEnv('SFDC_CLIENT_ID', 'SALESFORCE_CLIENT_ID', 'CLIENT_ID', 'clientId');
-const CLIENT_SECRET = readEnv('SFDC_CLIENT_SECRET', 'SALESFORCE_CLIENT_SECRET', 'CLIENT_SECRET', 'clientSecret');
+const CLIENT_ID = readEnv('SFDC_CLIENT_ID', 'SALESFORCE_CLIENT_ID', 'CLIENT_ID', 'clientId')
+  || '3MVG9kb26yEQGZW2V.gyqJMnP5BCMoOhskaytYERz4MlxkFTaxITAADW0Ap1I4Nt_WvNCRKDSGDjFQw9eUAFd';
+const CLIENT_SECRET = readEnv('SFDC_CLIENT_SECRET', 'SALESFORCE_CLIENT_SECRET', 'CLIENT_SECRET', 'clientSecret')
+  || 'A51D8336307E74DB94C39350BE67077E558F840FED3A1E79B07A13DD45E80EBC';
 
 const PRODUCT_SQL = `SELECT
   ssot__Id__c,
