@@ -1,5 +1,6 @@
 import './style.css';
-import { getCart, removeFromCart, updateCartCount, Product } from './cart';
+import { getCart, removeFromCart, updateCartCount } from './cart';
+import type { Product } from './cart';
 
 function renderCart() {
   const cartItemsContainer = document.getElementById('cart-items');

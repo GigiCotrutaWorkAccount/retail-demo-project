@@ -4,22 +4,25 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aura Retail | Premium Demo</title>
-    <!-- Google Fonts for Modern Typography -->
+    <title>Retail Demo Project</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <!-- Navbar -->
+    <div class="announcement-bar">
+      New season drop: weather-ready essentials with free shipping over $75.
+    </div>
+
     <header class="navbar">
       <div class="nav-container">
-        <a href="/" class="brand">AURA.</a>
+        <a href="/" class="brand">RETAIL DEMO</a>
         <nav class="nav-links">
-          <a href="#">Men</a>
-          <a href="#">Women</a>
-          <a href="#">Kids</a>
+          <a href="/product-list.html?gender=men">Men</a>
+          <a href="/product-list.html?gender=women">Women</a>
+          <a href="/product-list.html?style=sport">Sport</a>
+          <a href="/product-list.html?style=casual">Casual</a>
         </nav>
         <div class="cart-icon">
           <a href="/checkout.html">
@@ -30,39 +33,112 @@
       </div>
     </header>
 
-    <main>
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="hero-content">
-          <h1>Redefine Your Style</h1>
-          <p>Discover our exclusive collections hand-picked for your unique identity.</p>
-          <button class="cta-button">Shop Now</button>
-        </div>
-      </section>
-
-      <!-- Dynamic Categories Carousel -->
-      <section class="categories-section">
-        <h2>Explore Categories</h2>
-        <div class="carousel-container">
-          <button class="carousel-btn prev" id="carousel-prev">&lt;</button>
-          <div class="carousel-track" id="categories-track">
-            <!-- Populated via TS -->
+    <main class="home-page">
+      <section class="home-hero">
+        <div class="home-hero-copy home-hero-banner">
+          <img class="home-hero-image" src="/home-hero-comfort.svg" alt="Comfort-first footwear banner illustration" />
+          <div class="home-hero-banner-content">
+            <span class="eyebrow">Comfort-first essentials</span>
+            <h1>We care about comfort, not trends.</h1>
+            <p>
+              A large campaign banner with a simple message, a strong visual, and direct entry points into the main shopping paths.
+            </p>
+            <div class="home-hero-actions">
+              <a class="cta-button hero-secondary-link" href="/product-list.html?gender=men">Men</a>
+              <a class="cta-button hero-secondary-link" href="/product-list.html?gender=women">Women</a>
+            </div>
           </div>
-          <button class="carousel-btn next" id="carousel-next">&gt;</button>
         </div>
       </section>
 
-      <!-- Featured Products -->
-      <section class="products-section">
-        <h2>Featured Products</h2>
-        <div class="products-grid" id="products-grid">
-          <!-- Populated via TS -->
+      <section class="category-row-section" id="category-row">
+        <a class="category-row-card" href="/product-list.html?gender=men">
+          <img src="/category-men.svg" alt="Men category illustration" />
+          <div class="category-row-overlay"></div>
+          <div class="category-row-content">
+            <h2>Men</h2>
+            <span>Shop the men's edit</span>
+          </div>
+        </a>
+        <a class="category-row-card" href="/product-list.html?gender=women">
+          <img src="/category-women.svg" alt="Women category illustration" />
+          <div class="category-row-overlay"></div>
+          <div class="category-row-content">
+            <h2>Women</h2>
+            <span>Shop the women's edit</span>
+          </div>
+        </a>
+        <a class="category-row-card" href="/product-list.html?style=sport">
+          <img src="/category-sport.svg" alt="Sport category illustration" />
+          <div class="category-row-overlay"></div>
+          <div class="category-row-content">
+            <h2>Sport</h2>
+            <span>Shop performance styles</span>
+          </div>
+        </a>
+        <a class="category-row-card" href="/product-list.html?style=casual">
+          <img src="/category-casual.svg" alt="Casual category illustration" />
+          <div class="category-row-overlay"></div>
+          <div class="category-row-content">
+            <h2>Casual</h2>
+            <span>Shop everyday pairs</span>
+          </div>
+        </a>
+      </section>
+
+      <section class="banner-grid" id="banners">
+        <article class="banner-card banner-card-wide">
+          <span class="eyebrow">Category focus</span>
+          <h2>Performance pairs for movement and easy layers for everything after.</h2>
+          <p>Use this as a supporting banner beneath the main hero for merchandising or seasonal editorial placement.</p>
+          <a href="/product-list.html?style=sport">Shop sport</a>
+        </article>
+        <article class="banner-card banner-card-tall">
+          <span class="eyebrow">Mens</span>
+          <h3>Clean everyday footwear and socks built around softness.</h3>
+        </article>
+        <article class="banner-card banner-card-tall alt">
+          <span class="eyebrow">Womens</span>
+          <h3>Comfort-led silhouettes with casual and sport directions.</h3>
+        </article>
+      </section>
+
+      <section class="featured-section" id="featured">
+        <div class="section-heading-row">
+          <div>
+            <span class="eyebrow">Salesforce feed</span>
+            <h2>Featured products</h2>
+          </div>
+          <div class="carousel-controls">
+            <button class="carousel-control" id="products-prev" type="button" aria-label="Scroll products left">&larr;</button>
+            <button class="carousel-control" id="products-next" type="button" aria-label="Scroll products right">&rarr;</button>
+          </div>
         </div>
+        <p class="section-intro">
+          The carousel below is wired for external product data. Right now it reads from the demo API, which stands in for Salesforce merchandising content.
+        </p>
+        <div class="product-carousel-track" id="products-track"></div>
+      </section>
+
+      <section class="home-story-grid">
+        <article class="home-story-card story-card-large">
+          <span class="eyebrow">Category banner</span>
+          <h2>Guide shoppers fast with four clear entry points: men, women, sport, and casual.</h2>
+          <p>That top row now drives to a dedicated product-list page filtered by the selected category.</p>
+        </article>
+        <article class="home-story-card">
+          <span class="eyebrow">Shoes</span>
+          <h3>Use the collection page filters to narrow down shoes by audience and style.</h3>
+        </article>
+        <article class="home-story-card">
+          <span class="eyebrow">Socks</span>
+          <h3>Socks remain in the same taxonomy and can be reached from the collection filters.</h3>
+        </article>
       </section>
     </main>
 
     <footer>
-      <p>&copy; 2026 Aura Retail Demo. All rights reserved.</p>
+      <p>&copy; 2026 Retail Demo Project. Home page styled to match the current product experience.</p>
     </footer>
 
     <script type="module" src="/src/main.ts"></script>

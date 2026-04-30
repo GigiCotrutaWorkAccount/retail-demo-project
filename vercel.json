@@ -1,0 +1,23 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/product",
+      "destination": "/product.html"
+    },
+    {
+      "source": "/product-list",
+      "destination": "/product-list.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/checkout.html"
+    },
+    {
+      "source": "/purchase",
+      "destination": "/purchase.html"
+    }
+  ]
+}

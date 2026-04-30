@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop Collections | Retail Demo Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="announcement-bar">
+      New season drop: weather-ready essentials with free shipping over $75.
+    </div>
+
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="/" class="brand">RETAIL DEMO</a>
+        <nav class="nav-links">
+          <a href="/product-list.html?gender=men">Men</a>
+          <a href="/product-list.html?gender=women">Women</a>
+          <a href="/product-list.html?style=sport">Sport</a>
+          <a href="/product-list.html?style=casual">Casual</a>
+        </nav>
+        <div class="cart-icon">
+          <a href="/checkout.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="collection-page">
+      <section class="collection-hero">
+        <div>
+          <span class="eyebrow">Product list page</span>
+          <h1 id="collection-title">Shop All</h1>
+          <p id="collection-description" class="collection-description">
+            Explore filtered products by audience and style while keeping the same visual language as the rest of the store.
+          </p>
+        </div>
+        <a class="secondary-button collection-back-link" href="/">Back to home</a>
+      </section>
+
+      <section class="collection-filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Audience</span>
+          <div class="filter-pills" id="gender-filters"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Style</span>
+          <div class="filter-pills" id="style-filters"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Type</span>
+          <div class="filter-pills" id="type-filters"></div>
+        </div>
+      </section>
+
+      <section class="collection-results">
+        <div class="section-heading-row collection-results-header">
+          <div>
+            <span class="eyebrow">Matching products</span>
+            <h2 id="collection-results-title">All products</h2>
+          </div>
+          <span class="collection-count" id="collection-count">0 items</span>
+        </div>
+        <div class="collection-grid" id="collection-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Retail Demo Project. Filtered collection view for category browsing.</p>
+    </footer>
+
+    <script type="module" src="/src/product-list.ts"></script>
+  </body>
+</html>

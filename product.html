@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storm Runner | Retail Demo Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="announcement-bar">
+      New season drop: weather-ready essentials with free shipping over $75.
+    </div>
+
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="/" class="brand">RETAIL DEMO</a>
+        <nav class="nav-links">
+          <a href="#details">Details</a>
+          <a href="#materials">Materials</a>
+          <a href="#reviews">Reviews</a>
+        </nav>
+        <div class="cart-icon">
+          <a href="/checkout.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <span id="cart-count">0</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="product-page">
+      <section class="product-shell">
+        <div class="gallery-column">
+          <div class="breadcrumbs">Home / Men / Everyday Sneakers / Storm Runner</div>
+          <div class="gallery-frame">
+            <img
+              id="main-product-image"
+              class="main-product-image"
+              src="/product-storm-runner-brown-1.svg"
+              alt="Storm Runner product illustration"
+            />
+            <div class="gallery-chip" id="gallery-chip">Studio view</div>
+          </div>
+          <div class="thumbnail-row" id="thumbnail-row"></div>
+        </div>
+
+        <div class="product-column">
+          <div class="product-kicker-row">
+            <span class="product-kicker">Men's weather-ready sneaker</span>
+            <span class="product-badge">Best for city rain</span>
+          </div>
+
+          <h1>Storm Runner</h1>
+
+          <div class="rating-row">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <span>4.8</span>
+            <span class="rating-divider">•</span>
+            <a href="#reviews">2,143 reviews</a>
+          </div>
+
+          <div class="price-row">
+            <span class="price">$145</span>
+            <span class="price-note">Water-repellent merino blend</span>
+          </div>
+
+          <p class="lead-copy">
+            An original product page inspired by premium performance footwear layouts: soft cushioning,
+            weather-ready knit, and a low-profile silhouette built for cold commutes and fast errands.
+          </p>
+
+          <ul class="feature-list">
+            <li>Sealed knit upper with soft interior lining</li>
+            <li>Responsive foam midsole for everyday wear</li>
+            <li>Textured outsole tuned for slick sidewalks</li>
+          </ul>
+
+          <div class="selector-block">
+            <div class="selector-label-row">
+              <span>Color</span>
+              <strong id="selected-color-label">Weathered Brown</strong>
+            </div>
+            <div class="swatch-row" id="swatch-row"></div>
+          </div>
+
+          <div class="selector-block">
+            <div class="selector-label-row">
+              <span>Size</span>
+              <a href="#fit-guide">Fit guide</a>
+            </div>
+            <div class="size-grid" id="size-grid"></div>
+          </div>
+
+          <div class="purchase-panel">
+            <button class="cta-button primary-buy-button" id="add-to-cart-btn">Add to Cart</button>
+            <button class="secondary-button" id="save-btn">Save for Later</button>
+            <p class="inventory-note" id="inventory-note">In stock. Ships in 24 hours.</p>
+          </div>
+
+          <div class="assurance-grid">
+            <div>
+              <h3>Free exchanges</h3>
+              <p>Try it at home for 30 days with prepaid return labels.</p>
+            </div>
+            <div>
+              <h3>Carefully sourced</h3>
+              <p>Built with recycled trim and a natural-fiber-forward upper.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="story-band" id="details">
+        <div>
+          <span class="eyebrow">Why it works</span>
+          <h2>Built for damp mornings, office floors, and the last train home.</h2>
+        </div>
+        <p>
+          The layout and merchandising rhythm are inspired by modern direct-to-consumer footwear pages,
+          but the copy, visuals, and product story here are original to this demo.
+        </p>
+      </section>
+
+      <section class="details-grid" id="materials">
+        <article class="detail-card accent-card">
+          <span class="eyebrow">Weather system</span>
+          <h3>Quiet protection without the heavy boot look.</h3>
+          <p>
+            A tightly knit shell, soft inner backing, and structured heel combine to keep the silhouette clean while
+            offering everyday protection from splashes and light rain.
+          </p>
+        </article>
+        <article class="detail-card metrics-card">
+          <div class="metric">
+            <strong>14 mm</strong>
+            <span>Foam cushion under heel</span>
+          </div>
+          <div class="metric">
+            <strong>360°</strong>
+            <span>Wraparound traction pattern</span>
+          </div>
+          <div class="metric">
+            <strong>30 days</strong>
+            <span>Wear test window</span>
+          </div>
+        </article>
+        <article class="detail-card spec-card" id="fit-guide">
+          <span class="eyebrow">Fit guide</span>
+          <h3>True to size with a supportive midfoot hold.</h3>
+          <ul>
+            <li>Choose your regular sneaker size for everyday wear.</li>
+            <li>Between sizes? Size up for thicker socks.</li>
+            <li>Shaped collar makes entry easy without heel slip.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="review-section" id="reviews">
+        <div class="review-header">
+          <div>
+            <span class="eyebrow">Customer notes</span>
+            <h2>People keep these by the door.</h2>
+          </div>
+          <div class="review-score">
+            <strong>4.8/5</strong>
+            <span>Based on 2,143 demo reviews</span>
+          </div>
+        </div>
+
+        <div class="review-grid">
+          <article class="review-card">
+            <p>“Clean enough for the office, practical enough for a wet commute. The cushioning feels substantial without looking bulky.”</p>
+            <span>Alex, Chicago</span>
+          </article>
+          <article class="review-card">
+            <p>“I wanted something softer than a boot for drizzly weather. These handled sidewalks and subway stairs all week.”</p>
+            <span>Marcus, Seattle</span>
+          </article>
+          <article class="review-card">
+            <p>“The shape feels minimal, but the tread is more serious than it looks. Great travel shoe for cold cities.”</p>
+            <span>Jon, Boston</span>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Retail Demo Project. Original demo design inspired by modern footwear PDP patterns.</p>
+    </footer>
+
+    <script type="module" src="/src/product.ts"></script>
+  </body>
+</html>
