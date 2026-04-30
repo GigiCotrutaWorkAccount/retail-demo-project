@@ -1,6 +1,8 @@
 function readEnv(...keys: string[]) {
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env || {};
+
   for (const key of keys) {
-    const value = process.env[key];
+    const value = env[key];
     if (value && value.trim()) return value.trim();
   }
   return '';
