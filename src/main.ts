@@ -1,243 +1,74 @@
 import './style.css';
-import { addToCart, updateCartCount } from './cart';
-import type { Product } from './cart';
+import { addToCart, getCartId, updateCartCount } from './cart';
+import {
+  fetchCatalogProducts,
+  fetchProductsByShoppingCartId,
+  getCatalogCategories,
+  getCategoryQueryValue,
+  type CatalogProduct
+} from './data-cloud';
+import { initSalesforceTracking } from './salesforce-interactions';
 
-type FeedProduct = Product & {
-  badge?: string;
-  href?: string;
-  taxonomy?: {
-    gender?: string;
-    type?: string;
-    style?: string;
-  };
-};
+function dedupeById(products: CatalogProduct[]): CatalogProduct[] {
+  const seen = new Set<string>();
+  const deduped: CatalogProduct[] = [];
 
-type ProductFeedResponse = {
-  products: FeedProduct[];
-};
-
-export const fallbackProducts: FeedProduct[] = [
-  {
-    id: 'men-storm-runner',
-    name: 'Storm Runner',
-    price: 145,
-    category: 'Men / Shoes / Sport',
-    image: '/product-storm-runner-brown-1.svg',
-    badge: 'Best seller',
-    href: '/product.html'
-  },
-  {
-    id: 'men-drift-runner',
-    name: 'Drift Runner',
-    price: 135,
-    category: 'Men / Shoes / Casual',
-    image: '/product-storm-runner-brown-2.svg',
-    badge: 'New color',
-    href: '/product.html'
-  },
-  {
-    id: 'men-summit-lounger',
-    name: 'Summit Lounger',
-    price: 118,
-    category: 'Men / Shoes / Casual',
-    image: '/product-storm-runner-brown-3.svg',
-    badge: 'Softest feel',
-    href: '/product.html'
-  },
-  {
-    id: 'men-trail-dasher',
-    name: 'Trail Dasher',
-    price: 160,
-    category: 'Men / Shoes / Sport',
-    image: '/product-storm-runner-brown-4.svg',
-    badge: 'Grip focus',
-    href: '/product.html'
-  },
-  {
-    id: 'men-coast-runner',
-    name: 'Coast Runner',
-    price: 128,
-    category: 'Men / Shoes / Casual',
-    image: '/product-storm-runner-brown-1.svg',
-    badge: 'Travel pick',
-    href: '/product.html'
-  },
-  {
-    id: 'men-metro-knit',
-    name: 'Metro Knit',
-    price: 132,
-    category: 'Men / Shoes / Casual',
-    image: '/product-storm-runner-brown-2.svg',
-    badge: 'City edit',
-    href: '/product.html'
-  },
-  {
-    id: 'men-pulse-runner',
-    name: 'Pulse Runner',
-    price: 152,
-    category: 'Men / Shoes / Sport',
-    image: '/product-storm-runner-brown-3.svg',
-    badge: 'Responsive ride',
-    href: '/product.html'
-  },
-  {
-    id: 'men-weekend-knit',
-    name: 'Weekend Knit',
-    price: 124,
-    category: 'Men / Shoes / Casual',
-    image: '/product-storm-runner-brown-4.svg',
-    badge: 'Everyday pick',
-    href: '/product.html'
-  },
-  {
-    id: 'men-pace-crew-sock',
-    name: 'Pace Crew Sock',
-    price: 22,
-    category: 'Men / Socks / Sport',
-    image: '/product-storm-runner-brown-1.svg',
-    badge: 'Performance knit',
-    href: '/product.html'
-  },
-  {
-    id: 'men-rest-ankle-sock',
-    name: 'Rest Ankle Sock',
-    price: 18,
-    category: 'Men / Socks / Casual',
-    image: '/product-storm-runner-brown-2.svg',
-    badge: 'Daily comfort',
-    href: '/product.html'
-  },
-  {
-    id: 'women-cloud-runner',
-    name: 'Cloud Runner',
-    price: 142,
-    category: 'Women / Shoes / Sport',
-    image: '/product-storm-runner-brown-3.svg',
-    badge: 'Lightweight feel',
-    href: '/product.html'
-  },
-  {
-    id: 'women-harbor-runner',
-    name: 'Harbor Runner',
-    price: 138,
-    category: 'Women / Shoes / Casual',
-    image: '/product-storm-runner-brown-4.svg',
-    badge: 'Coastal neutral',
-    href: '/product.html'
-  },
-  {
-    id: 'women-arc-lounger',
-    name: 'Arc Lounger',
-    price: 116,
-    category: 'Women / Shoes / Casual',
-    image: '/product-storm-runner-brown-1.svg',
-    badge: 'Soft step',
-    href: '/product.html'
-  },
-  {
-    id: 'women-rally-dasher',
-    name: 'Rally Dasher',
-    price: 158,
-    category: 'Women / Shoes / Sport',
-    image: '/product-storm-runner-brown-2.svg',
-    badge: 'Road ready',
-    href: '/product.html'
-  },
-  {
-    id: 'women-studio-knit',
-    name: 'Studio Knit',
-    price: 126,
-    category: 'Women / Shoes / Casual',
-    image: '/product-storm-runner-brown-3.svg',
-    badge: 'Studio to street',
-    href: '/product.html'
-  },
-  {
-    id: 'women-peak-runner',
-    name: 'Peak Runner',
-    price: 149,
-    category: 'Women / Shoes / Sport',
-    image: '/product-storm-runner-brown-4.svg',
-    badge: 'Most cushioned',
-    href: '/product.html'
-  },
-  {
-    id: 'women-slate-runner',
-    name: 'Slate Runner',
-    price: 134,
-    category: 'Women / Shoes / Casual',
-    image: '/product-storm-runner-brown-1.svg',
-    badge: 'Minimal look',
-    href: '/product.html'
-  },
-  {
-    id: 'women-daily-drift',
-    name: 'Daily Drift',
-    price: 129,
-    category: 'Women / Shoes / Casual',
-    image: '/product-storm-runner-brown-2.svg',
-    badge: 'Weekend favorite',
-    href: '/product.html'
-  },
-  {
-    id: 'women-motion-crew-sock',
-    name: 'Motion Crew Sock',
-    price: 21,
-    category: 'Women / Socks / Sport',
-    image: '/product-storm-runner-brown-3.svg',
-    badge: 'Training staple',
-    href: '/product.html'
-  },
-  {
-    id: 'women-softstep-ankle-sock',
-    name: 'Softstep Ankle Sock',
-    price: 19,
-    category: 'Women / Socks / Casual',
-    image: '/product-storm-runner-brown-4.svg',
-    badge: 'Soft rib',
-    href: '/product.html'
+  for (const product of products) {
+    if (seen.has(product.id)) continue;
+    seen.add(product.id);
+    deduped.push(product);
   }
-];
 
-async function fetchProducts(): Promise<FeedProduct[]> {
-  try {
-    const response = await fetch('/api/data');
-    if (!response.ok) {
-      throw new Error('Product feed unavailable');
-    }
-
-    const data = await response.json() as ProductFeedResponse;
-    return data.products.map((product, index) => ({
-      ...product,
-      badge: product.badge || ['Best seller', 'New color', 'Everyday pick', 'Editor pick'][index % 4],
-      href: product.href || '/product.html'
-    }));
-  } catch (error) {
-    console.warn('Using fallback home feed', error);
-    return fallbackProducts;
-  }
+  return deduped;
 }
 
-function renderProducts(products: FeedProduct[]) {
+function renderCategoryCards(products: CatalogProduct[]) {
+  const container = document.getElementById('category-row');
+  if (!container) return;
+
+  const categories = getCatalogCategories(products);
+  const cards = categories.slice(0, 4).map((category) => {
+    const categoryProducts = products.filter((product) => product.category === category);
+    const firstImage = categoryProducts[0]?.image;
+    const itemCount = categoryProducts.length;
+
+    return `
+      <a class="category-row-card ${firstImage ? '' : 'no-image'}" href="/product-list.html?category=${getCategoryQueryValue(category)}">
+        ${firstImage ? `<img src="${firstImage}" alt="${category}" loading="lazy" />` : ''}
+        <div class="category-row-overlay"></div>
+        <div class="category-row-content">
+          <h2>${category}</h2>
+          <span>${itemCount} product${itemCount === 1 ? '' : 's'}</span>
+        </div>
+      </a>
+    `;
+  });
+
+  container.innerHTML = cards.join('');
+}
+
+function renderProducts(products: CatalogProduct[]) {
   const track = document.getElementById('products-track');
   if (!track) return;
 
-  track.innerHTML = products.map((product) => `
+  const featured = products.slice(0, 16);
+
+  track.innerHTML = featured.map((product) => `
     <article class="home-product-card">
-      <a class="home-product-media" href="/product.html?id=${product.id}&sale=true">
+      <a class="home-product-media" href="/product.html?id=${encodeURIComponent(product.id)}">
         <img src="${product.image}" alt="${product.name}" loading="lazy" />
       </a>
       <div class="home-product-info">
         <div class="home-product-meta">
-          <span class="home-product-badge">${product.badge || 'Featured'}</span>
+          <span class="home-product-badge">Data Cloud</span>
           <span class="home-product-category">${product.category}</span>
         </div>
         <div class="home-product-heading-row">
           <h3>${product.name}</h3>
-          <span>$${product.price.toFixed(0)}</span>
+          <span>$${product.price.toFixed(2)}</span>
         </div>
         <div class="home-product-actions">
-          <a class="text-link" href="/product.html?id=${product.id}&sale=true">View product</a>
+          <a class="text-link" href="/product.html?id=${encodeURIComponent(product.id)}">View product</a>
           <button class="mini-cart-button" type="button" data-product-id="${product.id}">Add</button>
         </div>
       </div>
@@ -246,7 +77,7 @@ function renderProducts(products: FeedProduct[]) {
 
   track.querySelectorAll<HTMLButtonElement>('[data-product-id]').forEach((button) => {
     button.addEventListener('click', () => {
-      const selectedProduct = products.find((product) => product.id === button.dataset.productId);
+      const selectedProduct = featured.find((product) => product.id === button.dataset.productId);
       if (!selectedProduct) return;
 
       addToCart(selectedProduct);
@@ -259,10 +90,58 @@ function renderProducts(products: FeedProduct[]) {
   });
 }
 
-function setupCarouselControls() {
-  const track = document.getElementById('products-track');
-  const previousButton = document.getElementById('products-prev');
-  const nextButton = document.getElementById('products-next');
+function renderReminderProducts(products: CatalogProduct[]) {
+  const track = document.getElementById('reminder-track');
+  const section = document.getElementById('cart-reminder-section');
+  if (!track || !section) return;
+
+  if (products.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = '';
+  track.innerHTML = products.map((product) => `
+    <article class="home-product-card">
+      <a class="home-product-media" href="/product.html?id=${encodeURIComponent(product.id)}">
+        <img src="${product.image}" alt="${product.name}" loading="lazy" />
+      </a>
+      <div class="home-product-info">
+        <div class="home-product-meta">
+          <span class="home-product-badge">Saved</span>
+          <span class="home-product-category">${product.category}</span>
+        </div>
+        <div class="home-product-heading-row">
+          <h3>${product.name}</h3>
+          <span>$${product.price.toFixed(2)}</span>
+        </div>
+        <div class="home-product-actions">
+          <a class="text-link" href="/product.html?id=${encodeURIComponent(product.id)}">View product</a>
+          <button class="mini-cart-button" type="button" data-reminder-product-id="${product.id}">Add</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+
+  track.querySelectorAll<HTMLButtonElement>('[data-reminder-product-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const selectedProduct = products.find((product) => product.id === button.dataset.reminderProductId);
+      if (!selectedProduct) return;
+
+      addToCart(selectedProduct);
+      const originalText = button.textContent;
+      button.textContent = 'Added';
+      window.setTimeout(() => {
+        button.textContent = originalText;
+      }, 1200);
+    });
+  });
+}
+
+function setupTrackControls(trackId: string, previousButtonId: string, nextButtonId: string) {
+  const track = document.getElementById(trackId);
+  const previousButton = document.getElementById(previousButtonId);
+  const nextButton = document.getElementById(nextButtonId);
   if (!track || !previousButton || !nextButton) return;
 
   const scrollAmount = 360;
@@ -274,10 +153,29 @@ function setupCarouselControls() {
   });
 }
 
+function buildReminderList(cartProducts: CatalogProduct[], catalogProducts: CatalogProduct[]): CatalogProduct[] {
+  const initial = dedupeById(cartProducts);
+  if (initial.length >= 8) return initial.slice(0, 8);
+
+  const missing = 8 - initial.length;
+  const fallback = catalogProducts.filter((product) => !initial.some((cartProduct) => cartProduct.id === product.id));
+  return [...initial, ...fallback.slice(0, missing)];
+}
+
 async function init() {
+  initSalesforceTracking();
   updateCartCount();
-  renderProducts(await fetchProducts());
-  setupCarouselControls();
+
+  const products = await fetchCatalogProducts();
+  const cartId = getCartId();
+  const cartProducts = cartId ? await fetchProductsByShoppingCartId(cartId) : [];
+  const reminderProducts = buildReminderList(cartProducts, products);
+
+  renderReminderProducts(reminderProducts);
+  renderCategoryCards(products);
+  renderProducts(products);
+  setupTrackControls('reminder-track', 'reminder-prev', 'reminder-next');
+  setupTrackControls('products-track', 'products-prev', 'products-next');
 }
 
 document.addEventListener('DOMContentLoaded', init);

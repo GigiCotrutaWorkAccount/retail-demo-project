@@ -19,10 +19,10 @@
       <div class="nav-container">
         <a href="/" class="brand">RETAIL DEMO</a>
         <nav class="nav-links">
-          <a href="/product-list.html?gender=men">Men</a>
-          <a href="/product-list.html?gender=women">Women</a>
-          <a href="/product-list.html?style=sport">Sport</a>
-          <a href="/product-list.html?style=casual">Casual</a>
+          <a href="/product-list.html?category=Boys%20Clothing">Boys Clothing</a>
+          <a href="/product-list.html?category=Men%20Clothing">Men Clothing</a>
+          <a href="/product-list.html?category=Girls%20Clothing">Girls Clothing</a>
+          <a href="/product-list.html?category=Women%20Clothing">Women Clothing</a>
         </nav>
         <div class="cart-icon">
           <a href="/checkout.html">
@@ -39,7 +39,7 @@
           <span class="eyebrow">Product list page</span>
           <h1 id="collection-title">Shop All</h1>
           <p id="collection-description" class="collection-description">
-            Explore filtered products by audience and style while keeping the same visual language as the rest of the store.
+            Browse all products returned by Salesforce Data Cloud and filter by the new clothing categories.
           </p>
         </div>
         <a class="secondary-button collection-back-link" href="/">Back to home</a>
@@ -47,16 +47,8 @@
 
       <section class="collection-filter-bar">
         <div class="filter-group">
-          <span class="filter-label">Audience</span>
-          <div class="filter-pills" id="gender-filters"></div>
-        </div>
-        <div class="filter-group">
-          <span class="filter-label">Style</span>
-          <div class="filter-pills" id="style-filters"></div>
-        </div>
-        <div class="filter-group">
-          <span class="filter-label">Type</span>
-          <div class="filter-pills" id="type-filters"></div>
+          <span class="filter-label">Category</span>
+          <div class="filter-pills" id="category-filters"></div>
         </div>
       </section>
 
@@ -76,6 +68,7 @@
       <p>&copy; 2026 Retail Demo Project. Filtered collection view for category browsing.</p>
     </footer>
 
+    <script src="https://cdn.c360a.salesforce.com/beacon/c360a/8b6b4d18-b867-4cc5-8fbc-5fd0b2b6aab0/scripts/c360a.min.js"></script>
     <script type="module" src="/src/product-list.ts"></script>
   </body>
 </html>

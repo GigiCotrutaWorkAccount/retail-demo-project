@@ -1,15 +1,18 @@
 import './style.css';
-import { getCart, removeFromCart, updateCartCount } from './cart';
+import { getCart, getCartId, removeFromCart, updateCartCount } from './cart';
 import type { Product } from './cart';
+import { initSalesforceTracking } from './salesforce-interactions';
 
 function renderCart() {
   const cartItemsContainer = document.getElementById('cart-items');
   const subtotalEl = document.getElementById('cart-subtotal');
   const totalEl = document.getElementById('cart-total');
+  const cartIdEl = document.getElementById('cart-id');
   
-  if (!cartItemsContainer || !subtotalEl || !totalEl) return;
+  if (!cartItemsContainer || !subtotalEl || !totalEl || !cartIdEl) return;
 
   const cart = getCart();
+  cartIdEl.textContent = getCartId() || '-';
   
   if (cart.length === 0) {
     cartItemsContainer.innerHTML = '<p>Your cart is empty. <a href="/">Continue shopping</a></p>';
@@ -45,6 +48,7 @@ function renderCart() {
 }
 
 function initCheckout() {
+  initSalesforceTracking();
   updateCartCount();
   renderCart();
 

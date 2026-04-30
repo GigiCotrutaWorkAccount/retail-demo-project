@@ -1,73 +1,184 @@
-export default function handler(req: any, res: any) {
-  const categories = [
-    {
-      id: 'men',
-      name: 'Men',
-      subcategories: [
-        {
-          id: 'men-shoes',
-          name: 'Shoes',
-          subcategories: [
-            { id: 'men-shoes-sport', name: 'Sport' },
-            { id: 'men-shoes-casual', name: 'Casual' }
-          ]
-        },
-        {
-          id: 'men-socks',
-          name: 'Socks',
-          subcategories: [
-            { id: 'men-socks-sport', name: 'Sport' },
-            { id: 'men-socks-casual', name: 'Casual' }
-          ]
-        }
-      ]
+const AUTH_URL = process.env.SFDC_AUTH_URL || 'https://ca1768230333461.my.salesforce.com/services/oauth2/token';
+const QUERY_URL = process.env.SFDC_QUERY_URL || 'https://ca1768230333461.my.salesforce.com/api/v2/query';
+const CLIENT_ID = process.env.SFDC_CLIENT_ID || '';
+const CLIENT_SECRET = process.env.SFDC_CLIENT_SECRET || '';
+
+const PRODUCT_SQL = `SELECT
+  ssot__Id__c,
+  ssot__Name__c,
+  ssot__ProductSKU__c,
+  ssot__Description__c,
+  ssot__MSRPAmount__c,
+  ssot__PrimaryProductCategory__c,
+  ssot__PrimaryProductImageURL__c
+FROM
+  ssot__Product__dlm`;
+
+type DataCloudRow = {
+  ssot__Id__c?: string;
+  ssot__Name__c?: string;
+  ssot__ProductSKU__c?: string;
+  ssot__Description__c?: string;
+  ssot__MSRPAmount__c?: number | string;
+  ssot__PrimaryProductCategory__c?: string;
+  ssot__PrimaryProductImageURL__c?: string;
+};
+
+type QueryBatchResponse = {
+  data?: DataCloudRow[];
+  done?: boolean | string;
+  batchId?: string;
+  nextBatchId?: string;
+  queryId?: string;
+  metadata?: unknown;
+};
+
+function isDone(value: boolean | string | undefined): boolean {
+  if (typeof value === 'boolean') return value;
+  return String(value).toLowerCase() === 'true';
+}
+
+async function fetchAccessToken(): Promise<string> {
+  const payload = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET
+  });
+
+  const response = await fetch(AUTH_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    {
-      id: 'women',
-      name: 'Women',
-      subcategories: [
-        {
-          id: 'women-shoes',
-          name: 'Shoes',
-          subcategories: [
-            { id: 'women-shoes-sport', name: 'Sport' },
-            { id: 'women-shoes-casual', name: 'Casual' }
-          ]
-        },
-        {
-          id: 'women-socks',
-          name: 'Socks',
-          subcategories: [
-            { id: 'women-socks-sport', name: 'Sport' },
-            { id: 'women-socks-casual', name: 'Casual' }
-          ]
-        }
-      ]
+    body: payload.toString()
+  });
+
+  if (!response.ok) {
+    throw new Error(`OAuth token request failed with status ${response.status}`);
+  }
+
+  const body = await response.json() as { access_token?: string };
+  if (!body.access_token) {
+    throw new Error('OAuth token response did not include access_token');
+  }
+
+  return body.access_token;
+}
+
+async function fetchFirstBatch(token: string): Promise<QueryBatchResponse> {
+  const response = await fetch(QUERY_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ sql: PRODUCT_SQL })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Initial Data Cloud query failed with status ${response.status}`);
+  }
+
+  return response.json() as Promise<QueryBatchResponse>;
+}
+
+async function fetchNextBatch(token: string, nextBatchId: string): Promise<QueryBatchResponse> {
+  const response = await fetch(`${QUERY_URL}/${encodeURIComponent(nextBatchId)}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json'
     }
-  ];
+  });
 
-  const products = [
-    { id: 'men-storm-runner', name: 'Storm Runner', price: 145, category: 'Men / Shoes / Sport', image: '/product-storm-runner-brown-1.svg', badge: 'Best seller', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'sport' } },
-    { id: 'men-drift-runner', name: 'Drift Runner', price: 135, category: 'Men / Shoes / Casual', image: '/product-storm-runner-brown-2.svg', badge: 'New color', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'casual' } },
-    { id: 'men-summit-lounger', name: 'Summit Lounger', price: 118, category: 'Men / Shoes / Casual', image: '/product-storm-runner-brown-3.svg', badge: 'Softest feel', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'casual' } },
-    { id: 'men-trail-dasher', name: 'Trail Dasher', price: 160, category: 'Men / Shoes / Sport', image: '/product-storm-runner-brown-4.svg', badge: 'Grip focus', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'sport' } },
-    { id: 'men-coast-runner', name: 'Coast Runner', price: 128, category: 'Men / Shoes / Casual', image: '/product-storm-runner-brown-1.svg', badge: 'Travel pick', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'casual' } },
-    { id: 'men-metro-knit', name: 'Metro Knit', price: 132, category: 'Men / Shoes / Casual', image: '/product-storm-runner-brown-2.svg', badge: 'City edit', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'casual' } },
-    { id: 'men-pulse-runner', name: 'Pulse Runner', price: 152, category: 'Men / Shoes / Sport', image: '/product-storm-runner-brown-3.svg', badge: 'Responsive ride', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'sport' } },
-    { id: 'men-weekend-knit', name: 'Weekend Knit', price: 124, category: 'Men / Shoes / Casual', image: '/product-storm-runner-brown-4.svg', badge: 'Everyday pick', href: '/product.html', taxonomy: { gender: 'men', type: 'shoes', style: 'casual' } },
-    { id: 'men-pace-crew-sock', name: 'Pace Crew Sock', price: 22, category: 'Men / Socks / Sport', image: '/product-storm-runner-brown-1.svg', badge: 'Performance knit', href: '/product.html', taxonomy: { gender: 'men', type: 'socks', style: 'sport' } },
-    { id: 'men-rest-ankle-sock', name: 'Rest Ankle Sock', price: 18, category: 'Men / Socks / Casual', image: '/product-storm-runner-brown-2.svg', badge: 'Daily comfort', href: '/product.html', taxonomy: { gender: 'men', type: 'socks', style: 'casual' } },
-    { id: 'women-cloud-runner', name: 'Cloud Runner', price: 142, category: 'Women / Shoes / Sport', image: '/product-storm-runner-brown-3.svg', badge: 'Lightweight feel', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'sport' } },
-    { id: 'women-harbor-runner', name: 'Harbor Runner', price: 138, category: 'Women / Shoes / Casual', image: '/product-storm-runner-brown-4.svg', badge: 'Coastal neutral', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'casual' } },
-    { id: 'women-arc-lounger', name: 'Arc Lounger', price: 116, category: 'Women / Shoes / Casual', image: '/product-storm-runner-brown-1.svg', badge: 'Soft step', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'casual' } },
-    { id: 'women-rally-dasher', name: 'Rally Dasher', price: 158, category: 'Women / Shoes / Sport', image: '/product-storm-runner-brown-2.svg', badge: 'Road ready', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'sport' } },
-    { id: 'women-studio-knit', name: 'Studio Knit', price: 126, category: 'Women / Shoes / Casual', image: '/product-storm-runner-brown-3.svg', badge: 'Studio to street', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'casual' } },
-    { id: 'women-peak-runner', name: 'Peak Runner', price: 149, category: 'Women / Shoes / Sport', image: '/product-storm-runner-brown-4.svg', badge: 'Most cushioned', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'sport' } },
-    { id: 'women-slate-runner', name: 'Slate Runner', price: 134, category: 'Women / Shoes / Casual', image: '/product-storm-runner-brown-1.svg', badge: 'Minimal look', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'casual' } },
-    { id: 'women-daily-drift', name: 'Daily Drift', price: 129, category: 'Women / Shoes / Casual', image: '/product-storm-runner-brown-2.svg', badge: 'Weekend favorite', href: '/product.html', taxonomy: { gender: 'women', type: 'shoes', style: 'casual' } },
-    { id: 'women-motion-crew-sock', name: 'Motion Crew Sock', price: 21, category: 'Women / Socks / Sport', image: '/product-storm-runner-brown-3.svg', badge: 'Training staple', href: '/product.html', taxonomy: { gender: 'women', type: 'socks', style: 'sport' } },
-    { id: 'women-softstep-ankle-sock', name: 'Softstep Ankle Sock', price: 19, category: 'Women / Socks / Casual', image: '/product-storm-runner-brown-4.svg', badge: 'Soft rib', href: '/product.html', taxonomy: { gender: 'women', type: 'socks', style: 'casual' } }
-  ];
+  if (!response.ok) {
+    throw new Error(`Data Cloud batch ${nextBatchId} failed with status ${response.status}`);
+  }
 
-  res.status(200).json({ categories, products });
+  return response.json() as Promise<QueryBatchResponse>;
+}
+
+async function fetchAllRows(token: string): Promise<{ rows: DataCloudRow[]; metadata: unknown }> {
+  const allRows: DataCloudRow[] = [];
+
+  let batch = await fetchFirstBatch(token);
+  allRows.push(...(batch.data || []));
+
+  while (!isDone(batch.done)) {
+    const nextBatchId = batch.nextBatchId || batch.batchId;
+    if (!nextBatchId) {
+      break;
+    }
+
+    batch = await fetchNextBatch(token, nextBatchId);
+    allRows.push(...(batch.data || []));
+  }
+
+  return {
+    rows: allRows,
+    metadata: batch.metadata || null
+  };
+}
+
+function normalizeCategory(category: string | undefined): string {
+  const raw = (category || '').trim();
+  const lower = raw.toLowerCase();
+
+  if (!raw) return 'Men Clothing';
+  if (lower.includes('boys')) return 'Boys Clothing';
+  if (lower.includes('girls')) return 'Girls Clothing';
+  if (lower.includes('women')) return 'Women Clothing';
+  if (lower.includes('men')) return 'Men Clothing';
+
+  return raw;
+}
+
+function normalizePrice(value: number | string | undefined): number {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const numeric = Number.parseFloat(value);
+    return Number.isFinite(numeric) ? numeric : 0;
+  }
+  return 0;
+}
+
+function mapProducts(rows: DataCloudRow[]) {
+  return rows.map((row, index) => {
+    const id = row.ssot__Id__c || `dc-product-${index + 1}`;
+    return {
+      id,
+      name: row.ssot__Name__c || `Data Cloud Product ${index + 1}`,
+      sku: row.ssot__ProductSKU__c || id,
+      description: row.ssot__Description__c || 'No description provided.',
+      price: normalizePrice(row.ssot__MSRPAmount__c),
+      category: normalizeCategory(row.ssot__PrimaryProductCategory__c),
+      image: row.ssot__PrimaryProductImageURL__c || '/favicon.svg'
+    };
+  });
+}
+
+export default async function handler(req: any, res: any) {
+  try {
+    if (!CLIENT_ID || !CLIENT_SECRET) {
+      return res.status(500).json({
+        error: 'Missing Salesforce Data Cloud credentials. Configure SFDC_CLIENT_ID and SFDC_CLIENT_SECRET.'
+      });
+    }
+
+    const token = await fetchAccessToken();
+    const { rows, metadata } = await fetchAllRows(token);
+    const products = mapProducts(rows);
+
+    const categories = Array.from(new Set(products.map((product) => product.category)));
+
+    return res.status(200).json({
+      products,
+      categories,
+      rowCount: rows.length,
+      metadata
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown Data Cloud error';
+    return res.status(500).json({ error: message });
+  }
 }

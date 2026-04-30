@@ -19,10 +19,10 @@
       <div class="nav-container">
         <a href="/" class="brand">RETAIL DEMO</a>
         <nav class="nav-links">
-          <a href="/product-list.html?gender=men">Men</a>
-          <a href="/product-list.html?gender=women">Women</a>
-          <a href="/product-list.html?style=sport">Sport</a>
-          <a href="/product-list.html?style=casual">Casual</a>
+          <a href="/product-list.html?category=Boys%20Clothing">Boys Clothing</a>
+          <a href="/product-list.html?category=Men%20Clothing">Men Clothing</a>
+          <a href="/product-list.html?category=Girls%20Clothing">Girls Clothing</a>
+          <a href="/product-list.html?category=Women%20Clothing">Women Clothing</a>
         </nav>
         <div class="cart-icon">
           <a href="/checkout.html">
@@ -41,65 +41,49 @@
             <span class="eyebrow">Comfort-first essentials</span>
             <h1>We care about comfort, not trends.</h1>
             <p>
-              A large campaign banner with a simple message, a strong visual, and direct entry points into the main shopping paths.
+              Product data is loaded from Salesforce Data Cloud at the beginning of the session and reused from local storage.
             </p>
             <div class="home-hero-actions">
-              <a class="cta-button hero-secondary-link" href="/product-list.html?gender=men">Men</a>
-              <a class="cta-button hero-secondary-link" href="/product-list.html?gender=women">Women</a>
+              <a class="cta-button hero-secondary-link" href="/product-list.html?category=Men%20Clothing">Men Clothing</a>
+              <a class="cta-button hero-secondary-link" href="/product-list.html?category=Women%20Clothing">Women Clothing</a>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="category-row-section" id="category-row">
-        <a class="category-row-card" href="/product-list.html?gender=men">
-          <img src="/category-men.svg" alt="Men category illustration" />
-          <div class="category-row-overlay"></div>
-          <div class="category-row-content">
-            <h2>Men</h2>
-            <span>Shop the men's edit</span>
+      <section class="featured-section reminder-section" id="cart-reminder-section">
+        <div class="section-heading-row">
+          <div>
+            <span class="eyebrow">Shopping cart</span>
+            <h2>No dejes que se te escapen</h2>
           </div>
-        </a>
-        <a class="category-row-card" href="/product-list.html?gender=women">
-          <img src="/category-women.svg" alt="Women category illustration" />
-          <div class="category-row-overlay"></div>
-          <div class="category-row-content">
-            <h2>Women</h2>
-            <span>Shop the women's edit</span>
+          <div class="carousel-controls">
+            <button class="carousel-control" id="reminder-prev" type="button" aria-label="Scroll reminder products left">&larr;</button>
+            <button class="carousel-control" id="reminder-next" type="button" aria-label="Scroll reminder products right">&rarr;</button>
           </div>
-        </a>
-        <a class="category-row-card" href="/product-list.html?style=sport">
-          <img src="/category-sport.svg" alt="Sport category illustration" />
-          <div class="category-row-overlay"></div>
-          <div class="category-row-content">
-            <h2>Sport</h2>
-            <span>Shop performance styles</span>
-          </div>
-        </a>
-        <a class="category-row-card" href="/product-list.html?style=casual">
-          <img src="/category-casual.svg" alt="Casual category illustration" />
-          <div class="category-row-overlay"></div>
-          <div class="category-row-content">
-            <h2>Casual</h2>
-            <span>Shop everyday pairs</span>
-          </div>
-        </a>
+        </div>
+        <p class="section-intro">
+          Products from your last shopping cart are shown first. The carousel fills up to 8 items with the main catalog when needed.
+        </p>
+        <div class="product-carousel-track" id="reminder-track"></div>
       </section>
+
+      <section class="category-row-section" id="category-row"></section>
 
       <section class="banner-grid" id="banners">
         <article class="banner-card banner-card-wide">
           <span class="eyebrow">Category focus</span>
-          <h2>Performance pairs for movement and easy layers for everything after.</h2>
-          <p>Use this as a supporting banner beneath the main hero for merchandising or seasonal editorial placement.</p>
-          <a href="/product-list.html?style=sport">Shop sport</a>
+          <h2>The storefront now adapts to Data Cloud categories and product metadata.</h2>
+          <p>Each product card, category card, and product detail page reads from the same cached dataset in localStorage.</p>
+          <a href="/product-list.html">Shop all categories</a>
         </article>
         <article class="banner-card banner-card-tall">
-          <span class="eyebrow">Mens</span>
-          <h3>Clean everyday footwear and socks built around softness.</h3>
+          <span class="eyebrow">Boys + Men</span>
+          <h3>Browse all products grouped under Boys Clothing and Men Clothing.</h3>
         </article>
         <article class="banner-card banner-card-tall alt">
-          <span class="eyebrow">Womens</span>
-          <h3>Comfort-led silhouettes with casual and sport directions.</h3>
+          <span class="eyebrow">Girls + Women</span>
+          <h3>Browse all products grouped under Girls Clothing and Women Clothing.</h3>
         </article>
       </section>
 
@@ -115,7 +99,7 @@
           </div>
         </div>
         <p class="section-intro">
-          The carousel below is wired for external product data. Right now it reads from the demo API, which stands in for Salesforce merchandising content.
+          The carousel below is populated from Salesforce Data Cloud and reused from local storage during the session.
         </p>
         <div class="product-carousel-track" id="products-track"></div>
       </section>
@@ -123,16 +107,16 @@
       <section class="home-story-grid">
         <article class="home-story-card story-card-large">
           <span class="eyebrow">Category banner</span>
-          <h2>Guide shoppers fast with four clear entry points: men, women, sport, and casual.</h2>
-          <p>That top row now drives to a dedicated product-list page filtered by the selected category.</p>
+          <h2>Guide shoppers fast with four category entry points driven directly by Data Cloud.</h2>
+          <p>The product list page now filters by category only: Boys Clothing, Men Clothing, Girls Clothing, and Women Clothing.</p>
         </article>
         <article class="home-story-card">
-          <span class="eyebrow">Shoes</span>
-          <h3>Use the collection page filters to narrow down shoes by audience and style.</h3>
+          <span class="eyebrow">Cached</span>
+          <h3>The app asks for all products once at session start, then uses the local cache.</h3>
         </article>
         <article class="home-story-card">
-          <span class="eyebrow">Socks</span>
-          <h3>Socks remain in the same taxonomy and can be reached from the collection filters.</h3>
+          <span class="eyebrow">Unified PDP</span>
+          <h3>Every product page now renders from live Data Cloud fields: SKU, category, description, image, and MSRP.</h3>
         </article>
       </section>
     </main>
@@ -141,6 +125,7 @@
       <p>&copy; 2026 Retail Demo Project. Home page styled to match the current product experience.</p>
     </footer>
 
+    <script src="https://cdn.c360a.salesforce.com/beacon/c360a/8b6b4d18-b867-4cc5-8fbc-5fd0b2b6aab0/scripts/c360a.min.js"></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
