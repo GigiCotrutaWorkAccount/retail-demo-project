@@ -1,7 +1,15 @@
-const AUTH_URL = process.env.SFDC_AUTH_URL || 'https://ca1768230333461.my.salesforce.com/services/oauth2/token';
-const QUERY_URL = process.env.SFDC_QUERY_URL || 'https://ca1768230333461.my.salesforce.com/api/v2/query';
-const CLIENT_ID = process.env.SFDC_CLIENT_ID || '';
-const CLIENT_SECRET = process.env.SFDC_CLIENT_SECRET || '';
+function readEnv(...keys: string[]) {
+  for (const key of keys) {
+    const value = process.env[key];
+    if (value && value.trim()) return value.trim();
+  }
+  return '';
+}
+
+const AUTH_URL = readEnv('SFDC_AUTH_URL', 'SALESFORCE_AUTH_URL') || 'https://ca1768230333461.my.salesforce.com/services/oauth2/token';
+const QUERY_URL = readEnv('SFDC_QUERY_URL', 'SALESFORCE_QUERY_URL') || 'https://ca1768230333461.my.salesforce.com/services/data/v61.0/ssot/query';
+const CLIENT_ID = readEnv('SFDC_CLIENT_ID', 'SALESFORCE_CLIENT_ID', 'CLIENT_ID', 'clientId');
+const CLIENT_SECRET = readEnv('SFDC_CLIENT_SECRET', 'SALESFORCE_CLIENT_SECRET', 'CLIENT_SECRET', 'clientSecret');
 
 const PRODUCT_SQL = `SELECT
   ssot__Id__c,
@@ -161,7 +169,7 @@ export default async function handler(req: any, res: any) {
   try {
     if (!CLIENT_ID || !CLIENT_SECRET) {
       return res.status(500).json({
-        error: 'Missing Salesforce Data Cloud credentials. Configure SFDC_CLIENT_ID and SFDC_CLIENT_SECRET.'
+        error: 'Missing Salesforce Data Cloud credentials. Configure SFDC_CLIENT_ID/SFDC_CLIENT_SECRET (or SALESFORCE_CLIENT_ID/SALESFORCE_CLIENT_SECRET).'
       });
     }
 
