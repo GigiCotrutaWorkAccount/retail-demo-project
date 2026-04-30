@@ -35,6 +35,27 @@ function pickRandomProducts(products: CatalogProduct[], count: number): CatalogP
   return shuffled.slice(0, count);
 }
 
+function enrichCartProducts(cartProducts: CatalogProduct[], catalogProducts: CatalogProduct[]): CatalogProduct[] {
+  return cartProducts.map((cartProduct) => {
+    const catalogMatch = catalogProducts.find((product) => product.id === cartProduct.id);
+    if (!catalogMatch) return cartProduct;
+
+    const hasPlaceholderImage = !cartProduct.image || cartProduct.image === '/favicon.svg';
+    const hasZeroPrice = !Number.isFinite(cartProduct.price) || cartProduct.price === 0;
+    const hasDefaultCategory = cartProduct.category === 'Men Clothing';
+
+    return {
+      ...cartProduct,
+      image: hasPlaceholderImage ? catalogMatch.image : cartProduct.image,
+      price: hasZeroPrice ? catalogMatch.price : cartProduct.price,
+      category: hasDefaultCategory ? catalogMatch.category : cartProduct.category,
+      name: cartProduct.name || catalogMatch.name,
+      description: cartProduct.description || catalogMatch.description,
+      sku: cartProduct.sku || catalogMatch.sku
+    };
+  });
+}
+
 function renderCategoryCards(products: CatalogProduct[]) {
   const container = document.getElementById('category-row');
   if (!container) return;
@@ -172,7 +193,8 @@ function setupTrackControls(trackId: string, previousButtonId: string, nextButto
 }
 
 function buildReminderList(cartProducts: CatalogProduct[], catalogProducts: CatalogProduct[]): CatalogProduct[] {
-  const initial = dedupeById(cartProducts);
+  const enrichedCartProducts = enrichCartProducts(cartProducts, catalogProducts);
+  const initial = dedupeById(enrichedCartProducts);
 
   if (initial.length === 0) {
     return pickRandomProducts(catalogProducts, 8);

@@ -1,6 +1,6 @@
 import type { Product } from './cart';
 
-const PRODUCTS_CACHE_KEY = 'retail_data_cloud_products_v1';
+const PRODUCTS_CACHE_KEY = 'retail_data_cloud_products_v2';
 const PRODUCTS_CACHE_FETCHED_AT_KEY = 'retail_data_cloud_products_fetched_at';
 const PRODUCTS_LOADED_IN_SESSION_KEY = 'retail_data_cloud_loaded_in_session';
 
@@ -60,7 +60,7 @@ function normalizeCategory(value: string | undefined): string {
 
 function normalizeProduct(raw: ApiProductRow, index: number): CatalogProduct {
 	const safeId = raw.id || `dc-product-${index + 1}`;
-	const image = raw.image && raw.image.trim() ? raw.image : '/favicon.svg';
+	const image = raw.image && raw.image.trim() ? raw.image.trim() : '';
 
 	return {
 		id: safeId,
@@ -73,6 +73,13 @@ function normalizeProduct(raw: ApiProductRow, index: number): CatalogProduct {
 		source: 'data-cloud',
 		href: `/product.html?id=${encodeURIComponent(safeId)}`
 	};
+}
+
+function hasRealImage(product: CatalogProduct): boolean {
+	const image = (product.image || '').trim();
+	if (!image) return false;
+	if (image === '/favicon.svg') return false;
+	return image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/');
 }
 
 function normalizeDataCloudRow(
@@ -161,9 +168,11 @@ export async function fetchCatalogProducts(options?: { forceRefresh?: boolean })
 				? payload.data.map((product, index) => normalizeDataCloudRow(product, index))
 				: [];
 
-		if (products.length > 0) {
-			writeCachedProducts(products);
-			return products;
+		const filteredProducts = products.filter((product) => hasRealImage(product));
+
+		if (filteredProducts.length > 0) {
+			writeCachedProducts(filteredProducts);
+			return filteredProducts;
 		}
 
 		return cached;
@@ -195,7 +204,9 @@ export async function fetchProductsByShoppingCartId(shoppingCartId: string): Pro
 
 		const payload = await response.json() as CartProductsApiResponse;
 		return Array.isArray(payload.products)
-			? payload.products.map((product, index) => normalizeProduct(product, index))
+			? payload.products
+				.map((product, index) => normalizeProduct(product, index))
+				.filter((product) => hasRealImage(product))
 			: [];
 	} catch (error) {
 		console.warn('Unable to fetch shopping cart products.', error);
