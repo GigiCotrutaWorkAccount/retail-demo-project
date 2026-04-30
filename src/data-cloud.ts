@@ -24,6 +24,15 @@ type CartProductsApiResponse = {
 
 type CatalogApiResponse = {
 	products?: ApiProductRow[];
+	data?: Array<{
+		ssot__Id__c?: string;
+		ssot__Name__c?: string;
+		ssot__ProductSKU__c?: string;
+		ssot__Description__c?: string;
+		ssot__MSRPAmount__c?: number | string;
+		ssot__PrimaryProductCategory__c?: string;
+		ssot__PrimaryProductImageURL__c?: string;
+	}>;
 };
 
 type ApiProductRow = {
@@ -64,6 +73,26 @@ function normalizeProduct(raw: ApiProductRow, index: number): CatalogProduct {
 		source: 'data-cloud',
 		href: `/product.html?id=${encodeURIComponent(safeId)}`
 	};
+}
+
+function normalizeDataCloudRow(
+	raw: NonNullable<CatalogApiResponse['data']>[number],
+	index: number
+): CatalogProduct {
+	return normalizeProduct(
+		{
+			id: raw.ssot__Id__c || `dc-product-${index + 1}`,
+			name: raw.ssot__Name__c || `Product ${index + 1}`,
+			sku: raw.ssot__ProductSKU__c,
+			description: raw.ssot__Description__c,
+			price: typeof raw.ssot__MSRPAmount__c === 'number'
+				? raw.ssot__MSRPAmount__c
+				: Number.parseFloat(String(raw.ssot__MSRPAmount__c || 0)),
+			category: raw.ssot__PrimaryProductCategory__c,
+			image: raw.ssot__PrimaryProductImageURL__c
+		},
+		index
+	);
 }
 
 function readCachedProducts(): CatalogProduct[] {
@@ -128,7 +157,9 @@ export async function fetchCatalogProducts(options?: { forceRefresh?: boolean })
 		const payload = await response.json() as CatalogApiResponse;
 		const products = Array.isArray(payload.products)
 			? payload.products.map((product, index) => normalizeProduct(product, index))
-			: [];
+			: Array.isArray(payload.data)
+				? payload.data.map((product, index) => normalizeDataCloudRow(product, index))
+				: [];
 
 		if (products.length > 0) {
 			writeCachedProducts(products);

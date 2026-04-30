@@ -22,6 +22,19 @@ function dedupeById(products: CatalogProduct[]): CatalogProduct[] {
   return deduped;
 }
 
+function pickRandomProducts(products: CatalogProduct[], count: number): CatalogProduct[] {
+  const shuffled = [...products];
+
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    const current = shuffled[i];
+    shuffled[i] = shuffled[randomIndex];
+    shuffled[randomIndex] = current;
+  }
+
+  return shuffled.slice(0, count);
+}
+
 function renderCategoryCards(products: CatalogProduct[]) {
   const container = document.getElementById('category-row');
   if (!container) return;
@@ -52,6 +65,11 @@ function renderProducts(products: CatalogProduct[]) {
   if (!track) return;
 
   const featured = products.slice(0, 16);
+
+  if (featured.length === 0) {
+    track.innerHTML = '<p class="collection-empty">No products available right now.</p>';
+    return;
+  }
 
   track.innerHTML = featured.map((product) => `
     <article class="home-product-card">
@@ -155,11 +173,17 @@ function setupTrackControls(trackId: string, previousButtonId: string, nextButto
 
 function buildReminderList(cartProducts: CatalogProduct[], catalogProducts: CatalogProduct[]): CatalogProduct[] {
   const initial = dedupeById(cartProducts);
+
+  if (initial.length === 0) {
+    return pickRandomProducts(catalogProducts, 8);
+  }
+
   if (initial.length >= 8) return initial.slice(0, 8);
 
   const missing = 8 - initial.length;
-  const fallback = catalogProducts.filter((product) => !initial.some((cartProduct) => cartProduct.id === product.id));
-  return [...initial, ...fallback.slice(0, missing)];
+  const fallbackCandidates = catalogProducts.filter((product) => !initial.some((cartProduct) => cartProduct.id === product.id));
+  const fallback = pickRandomProducts(fallbackCandidates, missing);
+  return [...initial, ...fallback];
 }
 
 async function init() {
