@@ -4,7 +4,7 @@ const CONSENT_STORAGE_KEY = 'retail_cookie_consent';
 const INDIVIDUAL_ID_STORAGE_KEY = 'retail_individual_id';
 const DEFAULT_INDIVIDUAL_ID = '003Kj00002fnqH8IAI';
 const CONSENT_COOKIE_NAME = 'retail_cookie_consent';
-const SALESFORCE_BEACON_SRC = 'https://cdn.c360a.salesforce.com/beacon/c360a/e79281fa-6ee0-4bd7-b10a-92d757f061b6/scripts/c360a.min.js';
+const SALESFORCE_BEACON_SRC = 'https://cdn.c360a.salesforce.com/beacon/c360a/957897e1-2078-47d6-8e12-d70a4e4e02c2/scripts/c360a.min.js';
 
 type ConsentState = 'accepted' | 'rejected' | null;
 
