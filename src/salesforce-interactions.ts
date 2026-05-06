@@ -235,7 +235,7 @@ export function trackAddToCartEvent(product: Product, shoppingCartId: string, qu
     productPrice: product.price,
     productQuantity: quantity,
     productSKU: product.sku || product.id,
-    productURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
+    productURL: product.image,
     shoppingCartId: shoppingCartId,
     productCategoryName: product.category
   };
@@ -254,7 +254,7 @@ export function trackRemoveFromCartEvent(product: Product, shoppingCartId: strin
     productPrice: product.price,
     productQuantity: quantity,
     productSKU: product.sku || product.id,
-    productURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
+    productURL: product.image,
     shoppingCartId: shoppingCartId,
     productCategoryName: product.category
   };
