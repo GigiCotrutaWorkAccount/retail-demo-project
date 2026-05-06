@@ -22,6 +22,7 @@ type InteractionPayload = {
   Website?: string;
   ProductCategoryName?: string;
   ProductEngagementId?: string;
+  eventType?: string;
 };
 
 declare global {
@@ -226,6 +227,7 @@ function buildBaseInteraction(): Pick<InteractionPayload, 'IndividualId' | 'Webs
 export function trackAddToCartEvent(product: Product, shoppingCartId: string, quantity = 1) {
   const interaction: InteractionPayload = {
     name: 'ShoppingCartEngagement',
+    eventType: 'ShoppingCartEngagement',
     ...buildBaseInteraction(),
     EngagementEventType: 'ADD',
     ProductId: product.id,
@@ -244,6 +246,7 @@ export function trackAddToCartEvent(product: Product, shoppingCartId: string, qu
 export function trackRemoveFromCartEvent(product: Product, shoppingCartId: string, quantity = 1) {
   const interaction: InteractionPayload = {
     name: 'ShoppingCartEngagement',
+    eventType: 'ShoppingCartEngagement',
     ...buildBaseInteraction(),
     EngagementEventType: 'REMOVE',
     ProductId: product.id,
@@ -262,6 +265,7 @@ export function trackRemoveFromCartEvent(product: Product, shoppingCartId: strin
 export function trackPurchaseEvent(shoppingCartId: string) {
   const interaction: InteractionPayload = {
     name: 'ProductOrderEngagement',
+    eventType: 'ProductOrderEngagement',
     IndividualId: getIndividualId(),
     EngagementEventType: 'PURCHASE',
     ShoppingCartId: shoppingCartId
