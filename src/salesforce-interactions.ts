@@ -4,24 +4,24 @@ const CONSENT_STORAGE_KEY = 'retail_cookie_consent';
 const INDIVIDUAL_ID_STORAGE_KEY = 'retail_individual_id';
 const DEFAULT_INDIVIDUAL_ID = '003Kj00002fnqH8IAI';
 const CONSENT_COOKIE_NAME = 'retail_cookie_consent';
-const SALESFORCE_BEACON_SRC = 'https://cdn.c360a.salesforce.com/beacon/c360a/8b6b4d18-b867-4cc5-8fbc-5fd0b2b6aab0/scripts/c360a.min.js';
+const SALESFORCE_BEACON_SRC = 'https://cdn.c360a.salesforce.com/beacon/c360a/e79281fa-6ee0-4bd7-b10a-92d757f061b6/scripts/c360a.min.js';
 
 type ConsentState = 'accepted' | 'rejected' | null;
 
 type InteractionPayload = {
   name: string;
-  IndividualId: string;
-  EngagementEventType?: string;
-  ProductId?: string;
-  ProductName?: string;
-  ProductPrice?: number;
-  ProductQuantity?: number;
-  ProductSKU?: string;
-  ProductURL?: string;
-  ShoppingCartId?: string;
-  Website?: string;
-  ProductCategoryName?: string;
-  ProductEngagementId?: string;
+  individualId: string;
+  engagementEventType?: string;
+  productId?: string;
+  productName?: string;
+  productPrice?: number;
+  productQuantity?: number;
+  productSKU?: string;
+  productURL?: string;
+  shoppingCartId?: string;
+  website?: string;
+  productCategoryName?: string;
+  productEngagementId?: string;
   eventType?: string;
 };
 
@@ -216,11 +216,11 @@ function queueOrSend(interaction: InteractionPayload) {
   ensureSalesforceSdkLoaded();
 }
 
-function buildBaseInteraction(): Pick<InteractionPayload, 'IndividualId' | 'Website' | 'ProductEngagementId'> {
+function buildBaseInteraction(): Pick<InteractionPayload, 'individualId' | 'website' | 'productEngagementId'> {
   return {
-    IndividualId: getIndividualId(),
-    Website: window.location.origin,
-    ProductEngagementId: generateUuid()
+    individualId: getIndividualId(),
+    website: window.location.origin,
+    productEngagementId: generateUuid()
   };
 }
 
@@ -229,15 +229,15 @@ export function trackAddToCartEvent(product: Product, shoppingCartId: string, qu
     name: 'ShoppingCartEngagement',
     eventType: 'ShoppingCartEngagement',
     ...buildBaseInteraction(),
-    EngagementEventType: 'ADD',
-    ProductId: product.id,
-    ProductName: product.name,
-    ProductPrice: product.price,
-    ProductQuantity: quantity,
-    ProductSKU: product.sku || product.id,
-    ProductURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
-    ShoppingCartId: shoppingCartId,
-    ProductCategoryName: product.category
+    engagementEventType: 'ADD',
+    productId: product.id,
+    productName: product.name,
+    productPrice: product.price,
+    productQuantity: quantity,
+    productSKU: product.sku || product.id,
+    productURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
+    shoppingCartId: shoppingCartId,
+    productCategoryName: product.category
   };
 
   queueOrSend(interaction);
@@ -248,15 +248,15 @@ export function trackRemoveFromCartEvent(product: Product, shoppingCartId: strin
     name: 'ShoppingCartEngagement',
     eventType: 'ShoppingCartEngagement',
     ...buildBaseInteraction(),
-    EngagementEventType: 'REMOVE',
-    ProductId: product.id,
-    ProductName: product.name,
-    ProductPrice: product.price,
-    ProductQuantity: quantity,
-    ProductSKU: product.sku || product.id,
-    ProductURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
-    ShoppingCartId: shoppingCartId,
-    ProductCategoryName: product.category
+    engagementEventType: 'REMOVE',
+    productId: product.id,
+    productName: product.name,
+    productPrice: product.price,
+    productQuantity: quantity,
+    productSKU: product.sku || product.id,
+    productURL: `${window.location.origin}/product.html?id=${encodeURIComponent(product.id)}`,
+    shoppingCartId: shoppingCartId,
+    productCategoryName: product.category
   };
 
   queueOrSend(interaction);
@@ -266,9 +266,9 @@ export function trackPurchaseEvent(shoppingCartId: string) {
   const interaction: InteractionPayload = {
     name: 'ProductOrderEngagement',
     eventType: 'ProductOrderEngagement',
-    IndividualId: getIndividualId(),
-    EngagementEventType: 'PURCHASE',
-    ShoppingCartId: shoppingCartId
+    individualId: getIndividualId(),
+    engagementEventType: 'PURCHASE',
+    shoppingCartId: shoppingCartId
   };
 
   queueOrSend(interaction);
